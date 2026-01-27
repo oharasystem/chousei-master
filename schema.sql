@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS events;
+CREATE TABLE events (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  memo TEXT,
+  options TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
