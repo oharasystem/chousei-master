@@ -55,6 +55,7 @@ export default function AttendeeTable({ eventId, options, attendees, onEdit }: P
     }, [eventId])
 
     return (
+        <div className="overflow-x-auto">
         <Table>
             <TableHeader>
                 <TableRow>
@@ -112,5 +113,6 @@ export default function AttendeeTable({ eventId, options, attendees, onEdit }: P
                 })}
             </TableBody>
         </Table>
+        </div>
     )
 }

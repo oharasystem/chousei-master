@@ -1,0 +1,21 @@
+import { Button } from './ui/button'
+
+export const Header = () => {
+  return (
+    <header className="border-b bg-white">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <a href="/" className="text-xl font-bold text-slate-900">
+          調整マスター
+        </a>
+        <nav className="flex items-center gap-4">
+          <a href="/history" className="text-sm text-slate-600 hover:text-slate-900">
+            履歴
+          </a>
+          <Button asChild>
+            <a href="/">イベント作成</a>
+          </Button>
+        </nav>
+      </div>
+    </header>
+  )
+}

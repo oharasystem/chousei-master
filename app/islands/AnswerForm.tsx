@@ -88,6 +88,13 @@ export default function AnswerForm({ eventId, options }: Props) {
         setToken(data.token)
       }
 
+      // Save to history
+      const answered = JSON.parse(localStorage.getItem('chousei_answered_events') || '[]')
+      if (!answered.includes(eventId)) {
+        answered.push(eventId)
+        localStorage.setItem('chousei_answered_events', JSON.stringify(answered))
+      }
+
       // Reload to reflect changes in the table
       window.location.reload()
     } catch (err) {
