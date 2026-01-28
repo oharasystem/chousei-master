@@ -48,6 +48,13 @@ export default function EventCreateForm() {
       if (res.ok) {
         const data = await res.json()
         if (data.id) {
+            // Save to history
+            const created = JSON.parse(localStorage.getItem('chousei_created_events') || '[]')
+            if (!created.includes(data.id)) {
+                created.push(data.id)
+                localStorage.setItem('chousei_created_events', JSON.stringify(created))
+            }
+
             window.location.href = `/events/${data.id}`
         } else {
             alert('Event created!')

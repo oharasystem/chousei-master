@@ -1,5 +1,8 @@
 /** @jsxImportSource react */
 import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
+import { Copy } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import AttendeeTable from './AttendeeTable'
 import AnswerForm from './AnswerForm'
 
@@ -36,10 +39,21 @@ export default function EventInteraction({ eventId, options, attendees }: Props)
         }, 100)
     }
 
+    const handleCopy = () => {
+        navigator.clipboard.writeText(window.location.href)
+        toast.success('URLをコピーしました')
+    }
+
     return (
         <div className="space-y-8">
             <div className="bg-card border rounded-lg p-6">
-                <h2 className="text-xl font-semibold mb-4">現在の参加状況</h2>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold">現在の参加状況</h2>
+                    <Button variant="outline" size="sm" onClick={handleCopy}>
+                        <Copy className="mr-2 h-4 w-4" />
+                        URLをコピー
+                    </Button>
+                </div>
                 <AttendeeTable
                     eventId={eventId}
                     options={options}
