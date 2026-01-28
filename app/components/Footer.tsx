@@ -9,7 +9,7 @@ export const Footer = () => {
           <a href="/privacy" className="hover:text-slate-900">プライバシーポリシー</a>
         </nav>
         <div className="text-xs text-slate-500">
-          Copyright © 2026 Chousei Master. All rights reserved.
+          © 2026 Chousei Master / solooo.dev
         </div>
       </div>
     </footer>
