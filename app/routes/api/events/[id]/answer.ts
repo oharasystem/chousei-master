@@ -13,12 +13,12 @@ export const GET = createRoute(async (c) => {
   )
     .bind(eventId, token)
     .first<{
-        id: number
-        event_id: string
-        token: string
-        name: string
-        answers: string
-        comment: string
+      id: number
+      event_id: string
+      token: string
+      name: string
+      answers: string
+      comment: string
     }>()
 
   if (!attendee) {
@@ -26,6 +26,7 @@ export const GET = createRoute(async (c) => {
   }
 
   return c.json({
+    id: attendee.id,
     name: attendee.name,
     answers: JSON.parse(attendee.answers),
     comment: attendee.comment,
@@ -64,7 +65,7 @@ export const POST = createRoute(async (c) => {
 
       return c.json({ token: body.token })
     }
-     return c.json({ error: 'Invalid token' }, 400)
+    return c.json({ error: 'Invalid token' }, 400)
   }
 
   // Create new
