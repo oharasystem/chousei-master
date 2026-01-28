@@ -6,3 +6,14 @@ CREATE TABLE events (
   options TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+DROP TABLE IF EXISTS attendees;
+CREATE TABLE attendees (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_id TEXT NOT NULL,
+  token TEXT NOT NULL,
+  name TEXT NOT NULL,
+  answers TEXT NOT NULL,
+  comment TEXT,
+  FOREIGN KEY (event_id) REFERENCES events(id)
+);
