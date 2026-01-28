@@ -9,10 +9,10 @@ export const Header = () => {
         </a>
         <nav className="flex items-center gap-4">
           <a href="/history" className="text-sm text-slate-600 hover:text-slate-900">
-            履歴
+            履歴を見る
           </a>
           <Button asChild>
-            <a href="/">イベント作成</a>
+            <a href="/">イベントを作る</a>
           </Button>
         </nav>
       </div>
