@@ -11,9 +11,9 @@ export default createRoute((c) => {
           当サービス「調整マスター」では、サービスの提供にあたり、以下の情報を収集・利用します。
         </p>
         <ul className="list-disc list-inside ml-4 text-slate-700 space-y-1">
-            <li>イベント作成時および回答時に入力されたお名前</li>
-            <li>日程調整に関する回答データ</li>
-            <li>IPアドレス、アクセスログ、Cookieなどの利用状況データ</li>
+          <li>イベント作成時および回答時に入力されたお名前</li>
+          <li>日程調整に関する回答データ</li>
+          <li>IPアドレス、アクセスログ、Cookieなどの利用状況データ</li>
         </ul>
       </section>
 
@@ -23,9 +23,9 @@ export default createRoute((c) => {
           収集した情報は、以下の目的で利用します。
         </p>
         <ul className="list-disc list-inside ml-4 text-slate-700 space-y-1">
-            <li>日程調整サービスの提供・維持・改善のため</li>
-            <li>不正アクセスの防止およびセキュリティ対策のため</li>
-            <li>利用状況の分析および広告配信のため</li>
+          <li>日程調整サービスの提供・維持・改善のため</li>
+          <li>不正アクセスの防止およびセキュリティ対策のため</li>
+          <li>利用状況の分析および広告配信のため</li>
         </ul>
       </section>
 
@@ -56,7 +56,7 @@ export default createRoute((c) => {
       </section>
 
       <div className="pt-8 text-sm text-slate-500">
-        <p>制定日: 2025年2月23日</p>
+        <p>制定日: 2026年1月29日</p>
       </div>
     </div>,
     { title: 'プライバシーポリシー' }
