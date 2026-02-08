@@ -5,11 +5,21 @@ import { Copy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import AttendeeTable from './AttendeeTable'
 import AnswerForm from './AnswerForm'
+import PollResults from '../components/PollResults'
+
+type PollConfig = {
+  enabled: boolean
+  title: string
+  description?: string
+  type: 'single' | 'multiple'
+  options: string[]
+}
 
 type Attendee = {
     id: number
     name: string
     answers: string // JSON string
+    poll_answers: string | null
     comment: string
 }
 
@@ -17,9 +27,10 @@ type Props = {
     eventId: string
     options: string[]
     attendees: Attendee[]
+    pollConfig: PollConfig | null
 }
 
-export default function EventInteraction({ eventId, options, attendees }: Props) {
+export default function EventInteraction({ eventId, options, attendees, pollConfig }: Props) {
     const [showForm, setShowForm] = useState(false)
     const [isClient, setIsClient] = useState(false)
 
@@ -62,13 +73,15 @@ export default function EventInteraction({ eventId, options, attendees }: Props)
                 />
             </div>
 
-            <div id="answer-form-container" className="max-w-xl mx-auto">
-                {/* Server-side default: render form invisible if js disabled? No, better to render visible for SSR/SEO, then hide client-side if token exists. */}
-                {/* Current logic: initial showForm false. On mount, if no token, set true. */}
-                {/* If JS disabled, form won't show. For better progressive enhancement, we might want to default true, but client request was "hide initially". */}
-                {/* Let's stick to client-side logic as requested for UX. Form appears if no token or edit clicked. */}
+            {pollConfig && pollConfig.enabled && (
+                <div className="space-y-4">
+                    <h2 className="text-xl font-semibold">アンケート集計</h2>
+                    <PollResults pollConfig={pollConfig} attendees={attendees} />
+                </div>
+            )}
 
-                {showForm && <AnswerForm eventId={eventId} options={options} />}
+            <div id="answer-form-container" className="max-w-xl mx-auto">
+                {showForm && <AnswerForm eventId={eventId} options={options} pollConfig={pollConfig || undefined} />}
                 {!showForm && isClient && (
                     <div className="text-center text-muted-foreground p-8 bg-muted/50 rounded-lg">
                         <p>回答済みです。修正する場合は表内の編集ボタンを押してください。</p>

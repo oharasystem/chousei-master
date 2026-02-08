@@ -4,6 +4,7 @@ CREATE TABLE events (
   title TEXT NOT NULL,
   memo TEXT,
   options TEXT NOT NULL,
+  poll_config TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -14,6 +15,7 @@ CREATE TABLE attendees (
   token TEXT NOT NULL,
   name TEXT NOT NULL,
   answers TEXT NOT NULL,
+  poll_answers TEXT,
   comment TEXT,
   FOREIGN KEY (event_id) REFERENCES events(id)
 );

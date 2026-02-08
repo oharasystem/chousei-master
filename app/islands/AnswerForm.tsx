@@ -3,16 +3,28 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+
+type PollConfig = {
+  enabled: boolean
+  title: string
+  description?: string
+  type: 'single' | 'multiple'
+  options: string[]
+}
 
 type Props = {
   eventId: string
   options: string[]
+  pollConfig?: PollConfig
 }
 
 type AnswerResponse = {
   name: string
   answers: Record<string, number>
+  poll_answers?: string[]
   comment: string
 }
 
@@ -21,7 +33,7 @@ type SubmitResponse = {
   error?: string
 }
 
-export default function AnswerForm({ eventId, options }: Props) {
+export default function AnswerForm({ eventId, options, pollConfig }: Props) {
   const [token, setToken] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [answers, setAnswers] = useState<Record<string, number>>(() => {
@@ -29,6 +41,7 @@ export default function AnswerForm({ eventId, options }: Props) {
     options.forEach((_, i) => defaults[String(i)] = 2)
     return defaults
   })
+  const [pollAnswers, setPollAnswers] = useState<string[]>([])
   const [comment, setComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -47,6 +60,7 @@ export default function AnswerForm({ eventId, options }: Props) {
           const d = data as AnswerResponse
           setName(d.name)
           setAnswers(d.answers)
+          setPollAnswers(d.poll_answers || [])
           setComment(d.comment || '')
         })
         .catch(err => {
@@ -76,6 +90,7 @@ export default function AnswerForm({ eventId, options }: Props) {
           token,
           name,
           answers,
+          poll_answers: pollAnswers,
           comment
         })
       })
@@ -117,7 +132,7 @@ export default function AnswerForm({ eventId, options }: Props) {
         <CardTitle>{token ? '回答を編集する' : '出欠を入力する'}</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="name">お名前</Label>
             <Input
@@ -169,7 +184,52 @@ export default function AnswerForm({ eventId, options }: Props) {
             </div>
           </div>
 
-          <div className="space-y-2">
+          {pollConfig && pollConfig.enabled && (
+            <div className="space-y-4 pt-4 border-t">
+              <div className="space-y-1">
+                <Label className="text-base">{pollConfig.title}</Label>
+                {pollConfig.description && (
+                  <p className="text-sm text-muted-foreground">{pollConfig.description}</p>
+                )}
+              </div>
+
+              {pollConfig.type === 'single' ? (
+                <RadioGroup
+                  value={pollAnswers[0] || ''}
+                  onValueChange={(val) => setPollAnswers([val])}
+                  className="space-y-2"
+                >
+                  {pollConfig.options.map((opt, i) => (
+                    <div key={i} className="flex items-center space-x-2">
+                      <RadioGroupItem value={opt} id={`poll-opt-${i}`} />
+                      <Label htmlFor={`poll-opt-${i}`} className="font-normal cursor-pointer">{opt}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              ) : (
+                <div className="space-y-2">
+                  {pollConfig.options.map((opt, i) => (
+                    <div key={i} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`poll-opt-${i}`}
+                        checked={pollAnswers.includes(opt)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setPollAnswers([...pollAnswers, opt])
+                          } else {
+                            setPollAnswers(pollAnswers.filter(a => a !== opt))
+                          }
+                        }}
+                      />
+                      <Label htmlFor={`poll-opt-${i}`} className="font-normal cursor-pointer">{opt}</Label>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="space-y-2 pt-4 border-t">
             <Label htmlFor="comment">コメント</Label>
             <Input
               id="comment"
@@ -188,4 +248,3 @@ export default function AnswerForm({ eventId, options }: Props) {
     </Card>
   )
 }
-
