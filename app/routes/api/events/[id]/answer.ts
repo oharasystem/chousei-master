@@ -18,6 +18,7 @@ export const GET = createRoute(async (c) => {
       token: string
       name: string
       answers: string
+      poll_answers: string | null
       comment: string
     }>()
 
@@ -29,6 +30,7 @@ export const GET = createRoute(async (c) => {
     id: attendee.id,
     name: attendee.name,
     answers: JSON.parse(attendee.answers),
+    poll_answers: attendee.poll_answers ? JSON.parse(attendee.poll_answers) : [],
     comment: attendee.comment,
   })
 })
@@ -39,6 +41,7 @@ export const POST = createRoute(async (c) => {
     token?: string
     name: string
     answers: Record<string, number>
+    poll_answers?: string[]
     comment: string
   }>()
 
@@ -47,6 +50,7 @@ export const POST = createRoute(async (c) => {
   }
 
   const answersStr = JSON.stringify(body.answers)
+  const pollAnswersStr = body.poll_answers ? JSON.stringify(body.poll_answers) : null
 
   if (body.token) {
     // Update existing
@@ -58,9 +62,9 @@ export const POST = createRoute(async (c) => {
 
     if (existing) {
       await c.env.DB.prepare(
-        'UPDATE attendees SET name = ?, answers = ?, comment = ? WHERE event_id = ? AND token = ?'
+        'UPDATE attendees SET name = ?, answers = ?, poll_answers = ?, comment = ? WHERE event_id = ? AND token = ?'
       )
-        .bind(body.name, answersStr, body.comment || '', eventId, body.token)
+        .bind(body.name, answersStr, pollAnswersStr, body.comment || '', eventId, body.token)
         .run()
 
       return c.json({ token: body.token })
@@ -71,9 +75,9 @@ export const POST = createRoute(async (c) => {
   // Create new
   const newToken = crypto.randomUUID()
   await c.env.DB.prepare(
-    'INSERT INTO attendees (event_id, token, name, answers, comment) VALUES (?, ?, ?, ?, ?)'
+    'INSERT INTO attendees (event_id, token, name, answers, poll_answers, comment) VALUES (?, ?, ?, ?, ?, ?)'
   )
-    .bind(eventId, newToken, body.name, answersStr, body.comment || '')
+    .bind(eventId, newToken, body.name, answersStr, pollAnswersStr, body.comment || '')
     .run()
 
   return c.json({ token: newToken })

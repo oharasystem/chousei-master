@@ -6,6 +6,7 @@ type Attendee = {
   id: number
   name: string
   answers: string // JSON string
+  poll_answers: string | null // NEW
   comment: string
 }
 
@@ -16,6 +17,7 @@ export default createRoute(async (c) => {
     title: string
     memo: string
     options: string
+    poll_config: string | null
     created_at: string
   }>()
 
@@ -24,6 +26,7 @@ export default createRoute(async (c) => {
   }
 
   const options = JSON.parse(event.options) as string[]
+  const pollConfig = event.poll_config ? JSON.parse(event.poll_config) : null
 
   // Fetch attendees
   const attendees = await c.env.DB.prepare('SELECT * FROM attendees WHERE event_id = ?').bind(id).all<Attendee>()
@@ -36,7 +39,7 @@ export default createRoute(async (c) => {
         {event.memo && <p className="text-gray-500">{event.memo}</p>}
       </div>
 
-      <EventInteraction eventId={event.id} options={options} attendees={attendeeList} />
+      <EventInteraction eventId={event.id} options={options} attendees={attendeeList} pollConfig={pollConfig} />
 
       <div className="mt-8 text-center">
         <a href="/" className="text-blue-500 hover:underline">新しいイベントを作成</a>
