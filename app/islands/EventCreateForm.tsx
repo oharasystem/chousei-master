@@ -1,28 +1,65 @@
 import { useState } from 'react'
-import { Plus, X, Loader2 } from 'lucide-react'
+import { Plus, X, Loader2, Calendar as CalendarIcon } from 'lucide-react'
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
+import { Calendar } from '@/components/ui/calendar'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 
 export default function EventCreateForm() {
   const [title, setTitle] = useState('')
   const [memo, setMemo] = useState('')
-  const [candidates, setCandidates] = useState<string[]>([''])
+  const [candidates, setCandidates] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
+  // Calendar & Time state
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [timeEnabled, setTimeEnabled] = useState(true)
+  const [timeValue, setTimeValue] = useState('19:00')
+
+  // Bulk input state
+  const [bulkText, setBulkText] = useState('')
+
+  const handleDateClick = (day: Date) => {
+    if (!day) return
+    // Format: YYYY/MM/DD(aaa)
+    const dateStr = format(day, 'yyyy/MM/dd(eee)', { locale: ja })
+    const candidate = timeEnabled ? `${dateStr} ${timeValue}` : dateStr
+
+    setCandidates(prev => [...prev, candidate])
+    setDate(day)
+  }
+
   const addCandidate = () => {
-    setCandidates([...candidates, ''])
+    setCandidates(prev => [...prev, ''])
   }
 
   const removeCandidate = (index: number) => {
-    setCandidates(candidates.filter((_, i) => i !== index))
+    setCandidates(prev => prev.filter((_, i) => i !== index))
   }
 
   const updateCandidate = (index: number, value: string) => {
-    const newCandidates = [...candidates]
-    newCandidates[index] = value
-    setCandidates(newCandidates)
+    setCandidates(prev => {
+      const newCandidates = [...prev]
+      newCandidates[index] = value
+      return newCandidates
+    })
+  }
+
+  const handleBulkAdd = () => {
+    if (!bulkText.trim()) return
+    const lines = bulkText.split(/[\n,]/)
+      .map(s => s.trim())
+      .filter(s => s !== '')
+
+    if (lines.length > 0) {
+      setCandidates(prev => [...prev, ...lines])
+      setBulkText('')
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,7 +108,7 @@ export default function EventCreateForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto mt-10">
+    <Card className="w-full max-w-4xl mx-auto mt-10">
       <CardHeader>
         <CardTitle>新規イベント作成</CardTitle>
         <CardDescription>イベント名と候補を入力して作成してください。</CardDescription>
@@ -97,33 +134,120 @@ export default function EventCreateForm() {
               onChange={(e) => setMemo(e.target.value)}
             />
           </div>
+
           <div className="space-y-2">
-            <Label>候補</Label>
-            {candidates.map((candidate, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  value={candidate}
-                  onChange={(e) => updateCandidate(index, e.target.value)}
-                  placeholder={`候補 ${index + 1}`}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeCandidate(index)}
-                  disabled={candidates.length === 1}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+            <Label>候補日程</Label>
+
+            <div className="grid md:grid-cols-2 gap-8 border rounded-lg p-6 bg-slate-50/50">
+              {/* Left/Top Column: Calendar */}
+              <div className="flex flex-col gap-6">
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground text-xs font-normal">
+                    カレンダーから追加
+                  </Label>
+                  <div className="border rounded-md bg-white w-fit mx-auto md:mx-0 p-4">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onDayClick={handleDateClick}
+                      locale={ja}
+                      className="rounded-md border-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4 bg-white p-3 rounded-md border w-fit">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="time-mode"
+                            checked={timeEnabled}
+                            onCheckedChange={setTimeEnabled}
+                        />
+                        <Label htmlFor="time-mode" className="cursor-pointer text-sm font-medium">時間を追加</Label>
+                    </div>
+                    {timeEnabled && (
+                        <Input
+                            type="time"
+                            value={timeValue}
+                            onChange={(e) => setTimeValue(e.target.value)}
+                            className="w-28 h-8"
+                        />
+                    )}
+                </div>
               </div>
-            ))}
-            <Button type="button" variant="outline" onClick={addCandidate} className="w-full">
-              <Plus className="mr-2 h-4 w-4" /> 候補を追加
-            </Button>
+
+              {/* Right/Bottom Column: List & Bulk Input */}
+              <div className="flex flex-col gap-6">
+                 {/* Bulk Input */}
+                <div className="space-y-2">
+                    <Label className="text-muted-foreground text-xs font-normal">
+                        テキストで一括追加 (改行またはカンマ区切り)
+                    </Label>
+                    <div className="flex flex-col gap-2">
+                        <Textarea
+                            placeholder="例: 候補A, 候補B..."
+                            value={bulkText}
+                            onChange={(e) => setBulkText(e.target.value)}
+                            className="bg-white"
+                            rows={3}
+                        />
+                        <Button type="button" variant="secondary" onClick={handleBulkAdd} size="sm" className="w-full">
+                            リストに追加
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Candidate List */}
+                <div className="flex flex-col gap-2 flex-1">
+                    <div className="flex justify-between items-center border-b pb-2">
+                        <Label className="text-sm font-medium">候補リスト ({candidates.length})</Label>
+                        {candidates.length > 0 && (
+                            <Button type="button" variant="ghost" size="sm" onClick={() => setCandidates([])} className="h-6 text-xs text-muted-foreground hover:text-destructive px-2">
+                                <X className="h-3 w-3 mr-1" />全てクリア
+                            </Button>
+                        )}
+                    </div>
+
+                    <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 min-h-[100px]">
+                        {candidates.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center h-full text-muted-foreground text-sm border-2 border-dashed rounded-lg p-6 bg-slate-50">
+                                <CalendarIcon className="h-8 w-8 mb-2 opacity-20" />
+                                <p>カレンダーの日付をクリックするか</p>
+                                <p>テキストを入力して追加してください</p>
+                            </div>
+                        ) : (
+                            candidates.map((candidate, index) => (
+                            <div key={index} className="flex gap-2">
+                                <Input
+                                value={candidate}
+                                onChange={(e) => updateCandidate(index, e.target.value)}
+                                placeholder={`候補 ${index + 1}`}
+                                className="bg-white flex-1"
+                                />
+                                <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeCandidate(index)}
+                                className="shrink-0"
+                                >
+                                <X className="h-4 w-4" />
+                                </Button>
+                            </div>
+                            ))
+                        )}
+                    </div>
+
+                    <Button type="button" variant="outline" onClick={addCandidate} className="w-full bg-white mt-2">
+                        <Plus className="mr-2 h-4 w-4" /> 自由入力枠を追加
+                    </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading || candidates.length === 0}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             イベントを作成
           </Button>
