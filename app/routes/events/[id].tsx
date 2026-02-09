@@ -33,7 +33,7 @@ export default createRoute(async (c) => {
   const attendeeList = attendees.results || []
 
   return c.render(
-    <div className="container max-w-4xl mx-auto py-8 space-y-8">
+    <div className="container max-w-4xl mx-auto px-4 py-8 space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-4">{event.title}</h1>
         {event.memo && <p className="text-gray-500">{event.memo}</p>}

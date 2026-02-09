@@ -3,7 +3,7 @@ import EventCreateForm from '../islands/EventCreateForm'
 
 export default createRoute((c) => {
   return c.render(
-    <div className="container py-8">
+    <div className="container mx-auto px-4 py-8">
       <EventCreateForm />
     </div>
   )
@@ -40,8 +40,8 @@ export const POST = createRoute(async (c) => {
     await c.env.DB.prepare(
       'INSERT INTO events (id, title, memo, options, poll_config, created_at) VALUES (?, ?, ?, ?, ?, ?)'
     )
-    .bind(id, body.title, body.memo || '', JSON.stringify(body.options), pollConfigStr, now)
-    .run()
+      .bind(id, body.title, body.memo || '', JSON.stringify(body.options), pollConfigStr, now)
+      .run()
 
     return c.json({ id })
   } catch (e) {

@@ -1,18 +1,18 @@
 /** @jsxImportSource react */
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { Copy } from 'lucide-react'
+import { Copy, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import AttendeeTable from './AttendeeTable'
 import AnswerForm from './AnswerForm'
 import PollResults from '../components/PollResults'
 
 type PollConfig = {
-  enabled: boolean
-  title: string
-  description?: string
-  type: 'single' | 'multiple'
-  options: string[]
+    enabled: boolean
+    title: string
+    description?: string
+    type: 'single' | 'multiple'
+    options: string[]
 }
 
 type Attendee = {
@@ -80,10 +80,11 @@ export default function EventInteraction({ eventId, options, attendees, pollConf
                 </div>
             )}
 
-            <div id="answer-form-container" className="max-w-xl mx-auto">
+            <div id="answer-form-container">
                 {showForm && <AnswerForm eventId={eventId} options={options} pollConfig={pollConfig || undefined} />}
                 {!showForm && isClient && (
-                    <div className="text-center text-muted-foreground p-8 bg-muted/50 rounded-lg">
+                    <div className="flex items-center justify-center gap-2 text-muted-foreground p-8 bg-muted/50 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
                         <p>回答済みです。修正する場合は表内の編集ボタンを押してください。</p>
                     </div>
                 )}

@@ -55,64 +55,64 @@ export default function AttendeeTable({ eventId, options, attendees, onEdit }: P
     }, [eventId])
 
     return (
-        <div className="overflow-x-auto">
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[150px]">名前</TableHead>
-                    {options.map((opt, i) => (
-                        <TableHead key={i} className="text-center">
-                            {opt}
-                        </TableHead>
-                    ))}
-                    <TableHead>コメント</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {attendees.length === 0 && (
+        <div className="overflow-x-auto -mx-6 px-6">
+            <Table className="min-w-[600px]">
+                <TableHeader>
                     <TableRow>
-                        <TableCell
-                            colSpan={options.length + 3}
-                            className="text-center h-24 text-muted-foreground"
-                        >
-                            まだ回答がありません
-                        </TableCell>
+                        <TableHead className="min-w-[80px] whitespace-nowrap">名前</TableHead>
+                        {options.map((opt, i) => (
+                            <TableHead key={i} className="text-center min-w-[100px] whitespace-nowrap">
+                                {opt}
+                            </TableHead>
+                        ))}
+                        <TableHead className="min-w-[100px] whitespace-nowrap">コメント</TableHead>
+                        <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
-                )}
-                {attendees.map((attendee) => {
-                    const answers = JSON.parse(attendee.answers) as Record<string, number>
-                    const isCurrentUser = currentUserId === attendee.id
-                    return (
-                        <TableRow
-                            key={attendee.id}
-                            className={isCurrentUser ? 'bg-orange-100 hover:bg-orange-200 dark:bg-orange-900/20 dark:hover:bg-orange-900/40' : ''}
-                        >
-                            <TableCell className="font-medium">{attendee.name}</TableCell>
-                            {options.map((_, i) => (
-                                <TableCell key={i} className="text-center">
-                                    {formatAnswer(answers[String(i)])}
-                                </TableCell>
-                            ))}
-                            <TableCell>{attendee.comment}</TableCell>
-                            <TableCell>
-                                {isCurrentUser && (
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={onEdit}
-                                        className="h-8 w-8 cursor-pointer transition-all hover:bg-orange-200 hover:text-orange-900 active:scale-95 active:bg-orange-300 dark:hover:bg-orange-800 dark:hover:text-orange-50 dark:active:bg-orange-700"
-                                        title="回答を編集する"
-                                    >
-                                        <Pencil className="h-4 w-4" />
-                                    </Button>
-                                )}
+                </TableHeader>
+                <TableBody>
+                    {attendees.length === 0 && (
+                        <TableRow>
+                            <TableCell
+                                colSpan={options.length + 3}
+                                className="text-center h-24 text-muted-foreground"
+                            >
+                                まだ回答がありません
                             </TableCell>
                         </TableRow>
-                    )
-                })}
-            </TableBody>
-        </Table>
+                    )}
+                    {attendees.map((attendee) => {
+                        const answers = JSON.parse(attendee.answers) as Record<string, number>
+                        const isCurrentUser = currentUserId === attendee.id
+                        return (
+                            <TableRow
+                                key={attendee.id}
+                                className={isCurrentUser ? 'bg-orange-100 hover:bg-orange-200 dark:bg-orange-900/20 dark:hover:bg-orange-900/40' : ''}
+                            >
+                                <TableCell className="font-medium whitespace-nowrap">{attendee.name}</TableCell>
+                                {options.map((_, i) => (
+                                    <TableCell key={i} className="text-center">
+                                        {formatAnswer(answers[String(i)])}
+                                    </TableCell>
+                                ))}
+                                <TableCell className="whitespace-nowrap">{attendee.comment}</TableCell>
+                                <TableCell>
+                                    {isCurrentUser && (
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={onEdit}
+                                            className="h-8 w-8 cursor-pointer transition-all hover:bg-orange-200 hover:text-orange-900 active:scale-95 active:bg-orange-300 dark:hover:bg-orange-800 dark:hover:text-orange-50 dark:active:bg-orange-700"
+                                            title="回答を編集する"
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
+                </TableBody>
+            </Table>
         </div>
     )
 }

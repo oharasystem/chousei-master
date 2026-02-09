@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Plus, X, Loader2, Calendar as CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
+import { useState, useMemo } from 'react'
+import { Plus, X, Loader2, Calendar as CalendarIcon, ChevronDown, ChevronUp } from 'lucide-react'
+import { format, parse } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-import { Calendar } from '@/components/ui/calendar'
+import SimpleCalendar from './SimpleCalendar'
 
 export default function EventCreateForm() {
   const [title, setTitle] = useState('')
@@ -23,6 +23,13 @@ export default function EventCreateForm() {
   const [pollType, setPollType] = useState<'single' | 'multiple'>('single')
   const [pollOptions, setPollOptions] = useState<string[]>([''])
 
+  // Advanced Settings State
+  const [anonymous, setAnonymous] = useState(false)
+  const [blind, setBlind] = useState(false)
+  const [protectedMode, setProtectedMode] = useState(false)
+  const [deadline, setDeadline] = useState('')
+  const [showAdvanced, setShowAdvanced] = useState(false)
+
   const [loading, setLoading] = useState(false)
 
   // Calendar & Time state
@@ -33,7 +40,25 @@ export default function EventCreateForm() {
   // Bulk input state
   const [bulkText, setBulkText] = useState('')
 
-  const handleDateClick = (day: Date) => {
+  // Extract dates from candidates for calendar highlighting
+  const markedDates = useMemo(() => {
+    return candidates
+      .map(candidate => {
+        // Try to parse date from candidate string (format: yyyy/MM/dd(eee) or yyyy/MM/dd(eee) HH:mm)
+        const match = candidate.match(/^(\d{4}\/\d{2}\/\d{2})/)
+        if (match) {
+          try {
+            return parse(match[1], 'yyyy/MM/dd', new Date())
+          } catch {
+            return null
+          }
+        }
+        return null
+      })
+      .filter((date): date is Date => date !== null)
+  }, [candidates])
+
+  const handleDateSelect = (day: Date) => {
     if (!day) return
     // Format: YYYY/MM/DD(aaa)
     const dateStr = format(day, 'yyyy/MM/dd(eee)', { locale: ja })
@@ -98,6 +123,12 @@ export default function EventCreateForm() {
       title,
       memo,
       options: validCandidates,
+      settings: {
+        anonymous,
+        blind,
+        protected: protectedMode,
+        deadline: deadline ? new Date(deadline).toISOString() : null
+      }
     }
 
     if (pollEnabled) {
@@ -132,6 +163,11 @@ export default function EventCreateForm() {
       if (res.ok) {
         const data = await res.json()
         if (data.id) {
+          // Save admin token
+          if (data.admin_token) {
+            localStorage.setItem(`chousei_admin_token_${data.id}`, data.admin_token)
+          }
+
           // Save to history
           const created = JSON.parse(localStorage.getItem('chousei_created_events') || '[]')
           if (!created.includes(data.id)) {
@@ -192,13 +228,11 @@ export default function EventCreateForm() {
                   <Label className="text-muted-foreground text-xs font-normal">
                     カレンダーから追加
                   </Label>
-                  <div className="border rounded-md bg-white w-fit mx-auto md:mx-0 p-4">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onDayClick={handleDateClick}
-                      locale={ja}
-                      className="rounded-md border-none"
+                  <div className="bg-white rounded-md mx-auto md:mx-0 w-fit">
+                    <SimpleCalendar
+                      selectedDate={date}
+                      onDateSelect={handleDateSelect}
+                      markedDates={markedDates}
                     />
                   </div>
                 </div>
@@ -217,7 +251,7 @@ export default function EventCreateForm() {
                       type="time"
                       value={timeValue}
                       onChange={(e) => setTimeValue(e.target.value)}
-                      className="w-28 h-8"
+                      className="w-28 h-8 cursor-pointer"
                     />
                   )}
                 </div>
@@ -291,6 +325,58 @@ export default function EventCreateForm() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Advanced Settings Section */}
+          <div className="border rounded-lg p-4 bg-muted/20">
+            <button
+              type="button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex items-center justify-between w-full text-left font-medium text-sm text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              <span>高度な設定 (管理者向け)</span>
+              {showAdvanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+
+            {showAdvanced && (
+              <div className="mt-4 space-y-6 pt-4 border-t animate-in slide-in-from-top-2">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="s-anonymous">匿名投票モード</Label>
+                    <p className="text-xs text-muted-foreground">参加者の名前を管理者以外に伏せます（例: 参加者 1）</p>
+                  </div>
+                  <Switch id="s-anonymous" checked={anonymous} onCheckedChange={setAnonymous} />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="s-blind">結果非公開モード</Label>
+                    <p className="text-xs text-muted-foreground">締め切りまで、自分以外の回答内容を非表示にします</p>
+                  </div>
+                  <Switch id="s-blind" checked={blind} onCheckedChange={setBlind} />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="s-protected">回答保護モード</Label>
+                    <p className="text-xs text-muted-foreground">一度回答すると、参加者は自身の回答を修正・削除できなくなります</p>
+                  </div>
+                  <Switch id="s-protected" checked={protectedMode} onCheckedChange={setProtectedMode} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="s-deadline">回答締め切り</Label>
+                  <Input
+                    id="s-deadline"
+                    type="datetime-local"
+                    value={deadline}
+                    onChange={e => setDeadline(e.target.value)}
+                    className="bg-white max-w-[250px]"
+                  />
+                  <p className="text-xs text-muted-foreground">指定日時以降、新規回答や編集を受け付けません</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Poll Section */}
