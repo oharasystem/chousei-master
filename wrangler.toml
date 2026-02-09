@@ -1,0 +1,8 @@
+# Cloudflare Pages configuration
+compatibility_date = "2026-01-27"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chousei-db"
+database_id = "cc50366a-729d-4fac-a0d3-a8f25a74c520"
