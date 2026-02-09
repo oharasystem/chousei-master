@@ -1,10 +1,27 @@
 import { createRoute } from 'honox/factory'
 import EventCreateForm from '../islands/EventCreateForm'
+import HeroSection from '../components/lp/HeroSection'
+import FeaturesSection from '../components/lp/FeaturesSection'
+import HowItWorksSection from '../components/lp/HowItWorksSection'
+import UseCasesSection from '../components/lp/UseCasesSection'
 
 export default createRoute((c) => {
   return c.render(
     <div className="container mx-auto px-4 py-8">
-      <EventCreateForm />
+      <div className="space-y-24 mb-24">
+        <HeroSection />
+        <FeaturesSection />
+        <HowItWorksSection />
+        <UseCasesSection />
+      </div>
+
+      <div id="create-form" className="pt-16 border-t scroll-mt-24">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold tracking-tight">さあ、イベントを作ろう</h2>
+          <p className="text-muted-foreground mt-4">タイトルと日程を入れるだけ。30秒で完了します。</p>
+        </div>
+        <EventCreateForm />
+      </div>
     </div>
   )
 })
