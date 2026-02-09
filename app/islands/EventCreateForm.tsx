@@ -8,7 +8,7 @@ import { Label } from '@/islands/ui/label'
 import { Textarea } from '@/islands/ui/textarea'
 import { Switch } from '@/islands/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/islands/ui/radio-group'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/islands/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import SimpleCalendar from './SimpleCalendar'
 
 export default function EventCreateForm() {

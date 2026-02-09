@@ -5,7 +5,7 @@ import { Input } from '@/islands/ui/input'
 import { Label } from '@/islands/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/islands/ui/radio-group'
 import { Checkbox } from '@/islands/ui/checkbox'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/islands/ui/card'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 
 type PollConfig = {
   enabled: boolean

@@ -1,5 +1,5 @@
 import { Zap, Vote, ShieldCheck } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/islands/ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 
 export default function FeaturesSection() {
   const features = [
