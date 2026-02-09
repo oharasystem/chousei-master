@@ -1,4 +1,4 @@
-import { Button } from "../ui/button"
+import { Button } from "@/islands/ui/button"
 
 export default function HeroSection() {
   return (

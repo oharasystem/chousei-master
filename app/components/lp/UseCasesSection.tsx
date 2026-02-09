@@ -1,4 +1,4 @@
-import { Badge } from "../ui/badge"
+import { Badge } from "@/islands/ui/badge"
 
 export default function UseCasesSection() {
   const cases = [

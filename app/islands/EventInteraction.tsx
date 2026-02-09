@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { Copy, CheckCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/islands/ui/button'
 import AttendeeTable from './AttendeeTable'
 import AnswerForm from './AnswerForm'
 import PollResults from './PollResults'

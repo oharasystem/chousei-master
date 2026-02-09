@@ -1,11 +1,11 @@
 /** @jsxImportSource react */
 import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/islands/ui/button'
+import { Input } from '@/islands/ui/input'
+import { Label } from '@/islands/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/islands/ui/radio-group'
+import { Checkbox } from '@/islands/ui/checkbox'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/islands/ui/card'
 
 type PollConfig = {
   enabled: boolean

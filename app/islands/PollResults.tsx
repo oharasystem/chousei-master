@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Progress } from '@/islands/ui/progress'
+import { Badge } from '@/islands/ui/badge'
+import { Card, CardHeader, CardTitle, CardContent } from '@/islands/ui/card'
 
 type PollConfig = {
   enabled: boolean

@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
 import { useEffect, useState } from 'react'
 import { Pencil } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/islands/ui/button'
 import {
     Table,
     TableBody,
@@ -9,7 +9,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/table'
+} from '@/islands/ui/table'
 
 type Attendee = {
     id: number
