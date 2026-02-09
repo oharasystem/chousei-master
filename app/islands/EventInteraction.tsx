@@ -5,7 +5,7 @@ import { Copy, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import AttendeeTable from './AttendeeTable'
 import AnswerForm from './AnswerForm'
-import PollResults from '../components/PollResults'
+import PollResults from './PollResults'
 
 type PollConfig = {
     enabled: boolean
