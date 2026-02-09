@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Plus, X, Loader2, Calendar as CalendarIcon, ChevronDown, ChevronUp } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,6 +39,24 @@ export default function EventCreateForm() {
 
   // Bulk input state
   const [bulkText, setBulkText] = useState('')
+
+  // Extract dates from candidates for calendar highlighting
+  const markedDates = useMemo(() => {
+    return candidates
+      .map(candidate => {
+        // Try to parse date from candidate string (format: yyyy/MM/dd(eee) or yyyy/MM/dd(eee) HH:mm)
+        const match = candidate.match(/^(\d{4}\/\d{2}\/\d{2})/)
+        if (match) {
+          try {
+            return parse(match[1], 'yyyy/MM/dd', new Date())
+          } catch {
+            return null
+          }
+        }
+        return null
+      })
+      .filter((date): date is Date => date !== null)
+  }, [candidates])
 
   const handleDateSelect = (day: Date) => {
     if (!day) return
@@ -214,6 +232,7 @@ export default function EventCreateForm() {
                     <SimpleCalendar
                       selectedDate={date}
                       onDateSelect={handleDateSelect}
+                      markedDates={markedDates}
                     />
                   </div>
                 </div>
@@ -232,7 +251,7 @@ export default function EventCreateForm() {
                       type="time"
                       value={timeValue}
                       onChange={(e) => setTimeValue(e.target.value)}
-                      className="w-28 h-8"
+                      className="w-28 h-8 cursor-pointer"
                     />
                   )}
                 </div>
@@ -313,7 +332,7 @@ export default function EventCreateForm() {
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex items-center justify-between w-full text-left font-medium text-sm text-foreground hover:text-primary transition-colors"
+              className="flex items-center justify-between w-full text-left font-medium text-sm text-foreground hover:text-primary transition-colors cursor-pointer"
             >
               <span>高度な設定 (管理者向け)</span>
               {showAdvanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
