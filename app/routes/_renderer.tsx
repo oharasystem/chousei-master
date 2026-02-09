@@ -24,7 +24,7 @@ export default reactRenderer(({ children, title }) => {
           </main>
           <Footer />
         </div>
-        {/* <ToastProvider /> */}
+        <ToastProvider />
       </body>
     </html>
   )
