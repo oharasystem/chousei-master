@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

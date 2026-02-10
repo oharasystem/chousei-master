@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { createRoute } from 'honox/factory'
 
 export default createRoute((c) => {

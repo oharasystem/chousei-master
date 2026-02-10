@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { useState, useMemo } from 'react'
 import { Plus, X, Loader2, Calendar as CalendarIcon, ChevronDown, ChevronUp } from 'lucide-react'
 import { format, parse } from 'date-fns'

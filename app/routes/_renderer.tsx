@@ -1,5 +1,6 @@
+/** @jsxImportSource react */
 import { reactRenderer } from '@hono/react-renderer'
-import { Link, Script } from 'honox/server'
+import { Link, Script } from '../components/renderer-utils'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import ToastProvider from '../islands/ToastProvider'

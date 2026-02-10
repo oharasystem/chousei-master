@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { Badge } from "@/islands/ui/badge"
 
 export default function UseCasesSection() {

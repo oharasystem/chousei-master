@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import type { ErrorHandler } from 'hono'
 
 const handler: ErrorHandler = (e, c) => {
