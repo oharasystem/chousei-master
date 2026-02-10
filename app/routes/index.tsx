@@ -1,9 +1,9 @@
 import { createRoute } from 'honox/factory'
 import EventCreateForm from '../islands/EventCreateForm'
-import HeroSection from '../components/lp/HeroSection'
-import FeaturesSection from '../components/lp/FeaturesSection'
-import HowItWorksSection from '../components/lp/HowItWorksSection'
-import UseCasesSection from '../components/lp/UseCasesSection'
+import HeroSection from '../islands/lp/HeroSection'
+import FeaturesSection from '../islands/lp/FeaturesSection'
+import HowItWorksSection from '../islands/lp/HowItWorksSection'
+import UseCasesSection from '../islands/lp/UseCasesSection'
 
 export default createRoute((c) => {
   return c.render(
