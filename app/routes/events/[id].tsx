@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { createRoute } from 'honox/factory'
 import EventInteraction from '../../islands/EventInteraction'
 import AdSpace from '../../components/AdSpace'

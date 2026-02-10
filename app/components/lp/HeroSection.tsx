@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { Button } from "@/islands/ui/button"
 
 export default function HeroSection() {

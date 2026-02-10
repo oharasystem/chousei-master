@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 export const Footer = () => {
   return (
     <footer className="border-t py-8 bg-gray-100 mt-auto">

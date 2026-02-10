@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { Toaster } from 'sonner'
 
 export default function ToastProvider() {
