@@ -1,5 +1,4 @@
 import { reactRenderer } from '@hono/react-renderer'
-import { Link, Script } from 'honox/server'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import ToastProvider from '../islands/ToastProvider'
@@ -19,13 +18,14 @@ export default reactRenderer(({ children, title }) => {
         <meta name="twitter:image" content="/ogp.png" />
 
         <link rel="icon" type="image/png" href="/favicon.png" />
-        <Link href="/app/style.css" rel="stylesheet" />
-        <Script src="/app/client.ts" async />
+        {/* Avoid honox/server components temporarily for debugging */}
+        <link href="/app/style.css" rel="stylesheet" />
+        <script src="/app/client.ts" async />
       </head>
       <body>
         <div className="flex flex-col min-h-screen">
           <Header />
-          <main className="flex-1">
+          <main className="flex-grow">
             {children}
           </main>
           <Footer />
