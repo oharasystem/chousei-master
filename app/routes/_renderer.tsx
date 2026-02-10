@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { reactRenderer } from '@hono/react-renderer'
 import { Link, Script } from '../components/renderer-utils'
 import { Header } from '../components/Header'

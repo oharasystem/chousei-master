@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { Fragment } from 'react'
 
 export const Script = ({ src, async, nonce }: { src: string, async?: boolean, nonce?: string }) => {
