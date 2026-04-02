@@ -18,8 +18,12 @@ export default reactRenderer(({ children, title, c }) => {
         <meta name="description" content="面倒な日程調整を、もっとシンプルに。ログイン不要で誰でもすぐに使える調整ツールです。" />
         <meta property="og:title" content={title ? `${title} - 調整マスター` : '調整マスター'} />
         <meta property="og:description" content="面倒な日程調整を、もっとシンプルに。ログイン不要で誰でもすぐに使える調整ツールです。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={c ? c.req.url : ''} />
         <meta property="og:image" content={ogImageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title ? `${title} - 調整マスター` : '調整マスター'} />
+        <meta name="twitter:description" content="面倒な日程調整を、もっとシンプルに。ログイン不要で誰でもすぐに使える調整ツールです。" />
         <meta name="twitter:image" content={ogImageUrl} />
 
         <link rel="icon" type="image/png" href="/favicon.png" />
