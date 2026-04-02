@@ -1,8 +1,6 @@
 /** @jsxImportSource react */
 import { createRoute } from 'honox/factory'
 import EventInteraction from '../../islands/EventInteraction'
-import AdSpace from '../../components/AdSpace'
-
 type Attendee = {
   id: number
   name: string
@@ -45,8 +43,6 @@ export default createRoute(async (c) => {
       <div className="mt-8 text-center">
         <a href="/" className="text-blue-500 hover:underline">新しいイベントを作成</a>
       </div>
-
-      <AdSpace />
     </div>,
     { title: event.title }
   )

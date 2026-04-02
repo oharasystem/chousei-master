@@ -5,7 +5,10 @@ import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import ToastProvider from '../islands/ToastProvider'
 
-export default reactRenderer(({ children, title }) => {
+export default reactRenderer(({ children, title, c }) => {
+  const origin = c ? new URL(c.req.url).origin : ''
+  const ogImageUrl = `${origin}/ogp.png`
+
   return (
     <html lang="ja">
       <head>
@@ -15,9 +18,9 @@ export default reactRenderer(({ children, title }) => {
         <meta name="description" content="面倒な日程調整を、もっとシンプルに。ログイン不要で誰でもすぐに使える調整ツールです。" />
         <meta property="og:title" content={title ? `${title} - 調整マスター` : '調整マスター'} />
         <meta property="og:description" content="面倒な日程調整を、もっとシンプルに。ログイン不要で誰でもすぐに使える調整ツールです。" />
-        <meta property="og:image" content="/ogp.png" />
+        <meta property="og:image" content={ogImageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="/ogp.png" />
+        <meta name="twitter:image" content={ogImageUrl} />
 
         <link rel="icon" type="image/png" href="/favicon.png" />
         <Link href="/app/style.css" rel="stylesheet" />
